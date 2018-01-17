@@ -12,5 +12,5 @@ WshShell.SendKeys "{ENTER}"
 
 WScript.Sleep 5000
 
-WshShell.SendKeys "Nag@lux!77"
+WshShell.SendKeys "Nagajux!69"
 WshShell.SendKeys "{ENTER}"
