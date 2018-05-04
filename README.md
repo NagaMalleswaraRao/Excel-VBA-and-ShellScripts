@@ -1,2 +1,2 @@
 # VBA
-this is my first repo
+This contains buliding blocks of VBA applications and some cool VBA snippets
