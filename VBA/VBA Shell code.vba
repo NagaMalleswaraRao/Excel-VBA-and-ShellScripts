@@ -45,12 +45,15 @@ ActiveSheet.UsedRange.ClearFormats
 Dim nr As Variant
 nr = Array("DATA_1", "DATA_2", "DATA_3", "DATA_4", "DATA_5", "DATA_6")
 
+'closing a workbook
+Workbooks("XYZ Damage Reduction Source Data Query.xlsx").Close
+     
 'save and close active workbook
 ActiveWorkbook.Close True
 
 'copying the formula in first row to lastrow of preceding columns and pasting as values from the next row _
- that leaves formula only in the first row (excel computes faster as a result)
- 'can write efficient way to copy paste (Pending)
+'that leaves formula only in the first row (excel computes faster as a result)
+'can write efficient way to copy paste (Pending)??????
 Dim lastrow1 As Long
 lastrow1 = Worksheets("Data").Cells(Rows.Count, 1).End(xlUp).Row
 
@@ -65,9 +68,6 @@ Selection.PasteSpecial xlPasteValues
 Windows("XYZ Damage Reduction Source Data Query.xlsx").Activate
 Workbooks.Open "\\USXS1031\Groups\EMA-XYZ\Public\XYZ Damage Data\XYZ Damage Reduction Source Data Query.xlsx"
 
-'closing a workbook
-Workbooks("XYZ Damage Reduction Source Data Query.xlsx").Close
-
 'refresh pivot table
 ActiveSheet.PivotTables("PivotTable1").RefreshTable
 
@@ -79,7 +79,7 @@ ActiveSheet.Range("$A$1:$AS$" & lastrow3).Offset(1, 0).SpecialCells _
     (xlCellTypeVisible).EntireRow.Delete
     
 ActiveSheet.AutoFilterMode = False
-               'sort
+'sort
 Range("A2:AS" & lastrow3).Sort key1:=Range("K2:K" & lastrow3), _
    order1:=xlAscending, Header:=xlNo
 
