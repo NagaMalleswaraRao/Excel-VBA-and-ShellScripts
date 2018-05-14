@@ -1,3 +1,4 @@
+'Open Cisco VPN and enter Credentials
 Set WshShell = WScript.CreateObject("WScript.Shell")
 
 WshShell.Run """%PROGRAMFILES(x86)%\Cisco\Cisco AnyConnect Secure Mobility Client\vpnui.exe"""
@@ -12,5 +13,5 @@ WshShell.SendKeys "{ENTER}"
 
 WScript.Sleep 5000
 
-WshShell.SendKeys "Nagajux!69"
+WshShell.SendKeys "Nagakaju!69"
 WshShell.SendKeys "{ENTER}"
