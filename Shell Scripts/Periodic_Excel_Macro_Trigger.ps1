@@ -1,4 +1,3 @@
-
 # Resource: https://community.spiceworks.com/how_to/17736-run-powershell-scripts-from-task-scheduler
 # Create a Task Scheduler, so that it will call a PowerShell script, which in turn calls
 # a VBA macro residing in Excel at periodic intervals
