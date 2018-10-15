@@ -6,10 +6,12 @@ Sub resource()
 Application.ScreenUpdating = False
 Application.EnableEvents = False
 Application.DisplayAlerts = False
+Application.AskToUpdateLinks = False
 
 Application.ScreenUpdating = True
 Application.EnableEvents = True
 Application.DisplayAlerts = True
+     Application.AskToUpdateLinks = True
 
 'defining dimensions or variables
 Dim wrksht As Worksheet
