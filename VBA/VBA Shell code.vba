@@ -84,5 +84,8 @@ ActiveSheet.AutoFilterMode = False
 'sort
 Range("A2:AS" & lastrow3).Sort key1:=Range("K2:K" & lastrow3), _
    order1:=xlAscending, Header:=xlNo
+                              
+'Paste the time stamp in a sheet cell after macro has run
+Worksheets("Refresh").Range("J16") = Now
 
 End Sub
