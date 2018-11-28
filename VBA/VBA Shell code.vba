@@ -55,36 +55,79 @@ ActiveWorkbook.Close True
 
 'copying the formula in first row to lastrow of preceding columns and pasting as values from the next row _
 'that leaves formula only in the first row (excel computes faster as a result)
-'can write efficient way to copy paste (Pending)??????
-Dim lastrow1 As Long
-lastrow1 = Worksheets("Data").Cells(Rows.Count, 1).End(xlUp).Row
+Dim LastRow_WkSt1 As Long
+LastRow_WkSt1 = Sheets("WkSt1").Cells(Rows.Count, 26).End(xlUp).Row
 
-Range("V9:AF9").Copy
-Range("V10:AF" & lastrow1).Select
-ActiveSheet.Paste
-Range("V10:AF" & lastrow1).Copy
-Range("V10").Select
-Selection.PasteSpecial xlPasteValues
+Worksheets("WkSt1").Range("AA7:IG" & LastRow_WkSt1).FillDown
+With Worksheets("WkSt1").Range("AA8:IG" & LastRow_WkSt1)
+    .Value = .Value
+End With
+
+'Move and append data from Wkst2 to Wkst4 
+LastRow_WkSt2 = Sheets("WkSt2").Cells(Rows.Count, 1).End(xlUp).Row
+LastRow_WkSt4 = Sheets("WkSt4").Cells(Rows.Count, 2).End(xlUp).Row
+Rows = LastRow_WkSt4 + LastRow_WkSt2 - 6 '6 is the row no. of header from the top 
+
+Worksheets("WkSt4").Range(Cells(LastRow_WkSt4 + 1, 1), Cells(Rows, 31)).Value = _
+Worksheets("WkSt2").Range("A7:AE" & LastRow_WkSt2).Value                         
 
 'Open workbook and switch windows (Ctrl+Tab)
 Windows("XYZ Damage Reduction Source Data Query.xlsx").Activate
 Workbooks.Open "\\USXS1031\Groups\EMA-XYZ\Public\XYZ Damage Data\XYZ Damage Reduction Source Data Query.xlsx"
 
-'refresh pivot table
-ActiveSheet.PivotTables("PivotTable1").RefreshTable
+'refresh pivot table in another sheet
+Sheets("WkSt3").PivotTables("PivotTable4").PivotCache.Refresh
 
-'filtering a value and deleting rows and sort ascending
-ActiveSheet.UsedRange.Select
-Selection.AutoFilter
-ActiveSheet.UsedRange.AutoFilter Field:=11, Criteria1:="2016"
-ActiveSheet.Range("$A$1:$AS$" & lastrow3).Offset(1, 0).SpecialCells _
-    (xlCellTypeVisible).EntireRow.Delete
-    
-ActiveSheet.AutoFilterMode = False
-'sort
-Range("A2:AS" & lastrow3).Sort key1:=Range("K2:K" & lastrow3), _
-   order1:=xlAscending, Header:=xlNo
-                              
+'''Deleting the old "current month" units, sorting data to remove blanks in middle
+Dim rng As Range, rng2 As Range
+LastRow_Units2 = Sheets("Units").Cells(Rows.Count, 13).End(xlUp).Row
+Set rng = Worksheets("Units").Range("L9:R" & LastRow_Units2)
+
+rng.AutoFilter
+
+With rng
+        .AutoFilter Field:=2, Criteria1:=Year
+        .AutoFilter Field:=3, Criteria1:=Month
+        .Offset(1, 0).SpecialCells(xlCellTypeVisible).ClearContents
+End With
+
+ActiveSheet.ShowAllData
+
+''Sort on Year and Month to remove blanks in middle
+With ActiveSheet.Sort
+     .SortFields.Add Key:=Range("M9"), Order:=xlAscending
+     .SortFields.Add Key:=Range("N9"), Order:=xlAscending
+     .SetRange rng
+     .Header = xlYes
+     .Apply
+End With
+
+''Reapplying filter, if no filter is present. Later we can bring updated Units here
+rng.AutoFilter
+If ActiveSheet.AutoFilterMode Then
+Else
+   rng.AutoFilter
+End If
+
+'Filter multiple items in a field
+LastRow_Units2 = Sheets("Units").Cells(Rows.Count, 13).End(xlUp).Row
+Set rng2 = Worksheets("Units").Range("L9:S" & LastRow_Units2)
+
+With rng2
+        .AutoFilter Field:=1, Criteria1:=Array( _
+ "Asheville", "Springfield", "Memphis"), Operator:=xlFilterValues
+End With
+
+'Refresh Data Connections
+Dim objConn As Variant
+For Each objConn In ThisWorkbook.Connections
+    objConn.Refresh
+Next
+
+'Clear contents
+LastRow_WkSt4 = Sheets("WkSt4").Cells(Rows.Count, 2).End(xlUp).Row
+Worksheets("WkSt4").Range("A2:AE" & LastRow_WkSt4).ClearContents
+
 'Paste the time stamp in a sheet cell after macro has run
 Worksheets("Refresh").Range("J16") = Now
 
