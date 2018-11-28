@@ -53,6 +53,14 @@ Workbooks("XYZ Damage Reduction Source Data Query.xlsx").Close
 'save and close active workbook
 ActiveWorkbook.Close True
 
+'Delete data from A to AE, leave a formula row from Af to BC                         
+LastRow_WkSt40 = Worksheets("WkSt4").Cells(Rows.Count, 2).End(xlUp).Row
+
+If LastRow_WkSt40 > 2 Then
+    Worksheets("WkSt4").Range("A2:AE" & LastRow_WkSt40).ClearContents
+    Worksheets("WkSt4").Range("AF3:BC" & LastRow_WkSt40).ClearContents
+End If                        
+
 'copying the formula in first row to lastrow of preceding columns and pasting as values from the next row _
 'that leaves formula only in the first row (excel computes faster as a result)
 Dim LastRow_WkSt1 As Long
