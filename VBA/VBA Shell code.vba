@@ -66,9 +66,9 @@ End With
 'Move and append data from Wkst2 to Wkst4 
 LastRow_WkSt2 = Sheets("WkSt2").Cells(Rows.Count, 1).End(xlUp).Row
 LastRow_WkSt4 = Sheets("WkSt4").Cells(Rows.Count, 2).End(xlUp).Row
-Rows = LastRow_WkSt4 + LastRow_WkSt2 - 6 '6 is the row no. of header from the top 
+Rowz = LastRow_WkSt4 + LastRow_WkSt2 - 6 '6 is the row no. of header from the top 
 
-Worksheets("WkSt4").Range(Cells(LastRow_WkSt4 + 1, 1), Cells(Rows, 31)).Value = _
+Worksheets("WkSt4").Range(Cells(LastRow_WkSt4 + 1, 1), Cells(Rowz, 31)).Value = _
 Worksheets("WkSt2").Range("A7:AE" & LastRow_WkSt2).Value                         
 
 'Open workbook and switch windows (Ctrl+Tab)
