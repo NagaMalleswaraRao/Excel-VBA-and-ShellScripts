@@ -3,16 +3,20 @@ Option Explicit
 Sub resource()
 
 'enabling and disabling events
-Application.ScreenUpdating = False
-Application.EnableEvents = False
-Application.DisplayAlerts = False
-Application.AskToUpdateLinks = False
+Application.ScreenUpdating = False 'Runs macro code without showing what it's doing
+Application.EnableEvents = False 'Suppresses doubleclick, sheet selection events of Worksheet code
+Application.DisplayAlerts = False 'Suppresses alerts like "Do you want to save this wkbk?" etc.
+Application.AskToUpdateLinks = False 'Suppresses "Do you want to update links (formula references another wkbk)?"
 
 Application.ScreenUpdating = True
 Application.EnableEvents = True
 Application.DisplayAlerts = True
 Application.AskToUpdateLinks = True
 
+'Toggle calculation mode
+Application.Calculation = xlCalculationAutomatic
+Application.Calculation = xlCalculationManual     
+     
 'defining dimensions or variables
 Dim wrksht As Worksheet
 Dim p As Integer
@@ -20,14 +24,12 @@ Dim z As String
 Dim a As Long
 Dim b As Double
 
-'select a worksheet
+'select a worksheet (try to avoid this as much as possible)
 Worksheets("Sheet3").Activate
 Worksheets("Sheet3").Select
 Sheets("Sheet4").Activate
-Sheet1.Activate
-Sheet1.Select
 
-'Select a range (cell) in the active worksheet
+'Select a range (cell) in the active worksheet (try to avoid this as much as possible)
 ActiveSheet.Range("C5").Select
 Worksheets("Sheet3").Range("C5").Select
 Range("E10").Select
@@ -66,25 +68,39 @@ End If
 Dim LastRow_WkSt1 As Long
 LastRow_WkSt1 = Sheets("WkSt1").Cells(Rows.Count, 26).End(xlUp).Row
 
+'This converts cell value 0012 to 12 (avoid this if you have numeric text and use the code below)
 Worksheets("WkSt1").Range("AA7:IG" & LastRow_WkSt1).FillDown
 With Worksheets("WkSt1").Range("AA8:IG" & LastRow_WkSt1)
     .Value = .Value
 End With
+
+'This leaves the formats and data types as is
+With Worksheets("WkSt1").Range("AA8:IG" & LastRow_WkSt1)
+    .Copy
+    .PasteSpecial xlPasteValues
+End With
+Application.CutCopyMode = False
 
 'Move and append data from Wkst2 to Wkst4 
 LastRow_WkSt2 = Sheets("WkSt2").Cells(Rows.Count, 1).End(xlUp).Row
 LastRow_WkSt4 = Sheets("WkSt4").Cells(Rows.Count, 2).End(xlUp).Row
 Rowz = LastRow_WkSt4 + LastRow_WkSt2 - 6 '6 is the row no. of header from the top 
 
+'This converts 0012 to 12 (avoid this if you have numeric text and use the code below)
 Worksheets("WkSt4").Range(Cells(LastRow_WkSt4 + 1, 1), Cells(Rowz, 31)).Value = _
 Worksheets("WkSt2").Range("A7:AE" & LastRow_WkSt2).Value                         
+
+'No need to define "Rowz" for the below snippet
+Worksheets("WkSt2").Range("A7:AE" & LastRow_WkSt2).Copy
+Worksheets("WkSt4").Cells(LastRow_WkSt4 + 1, 1).PasteSpecial xlPasteValues
+Application.CutCopyMode = False
 
 'Open workbook and switch windows (Ctrl+Tab)
 Windows("XYZ Damage Reduction Source Data Query.xlsx").Activate
 Workbooks.Open "\\USXS1031\Groups\EMA-XYZ\Public\XYZ Damage Data\XYZ Damage Reduction Source Data Query.xlsx"
 
 'refresh pivot table in another sheet
-Sheets("WkSt3").PivotTables("PivotTable4").PivotCache.Refresh
+Worksheets("WkSt3").PivotTables("PivotTable4").PivotCache.Refresh
 
 '''Deleting the old "current month" units, sorting data to remove blanks in middle
 Dim rng As Range, rng2 As Range
@@ -109,6 +125,7 @@ With ActiveSheet.Sort
      .Header = xlYes
      .Apply
 End With
+Worksheets("Units").Sort.SortFields.Clear
 
 ''Reapplying filter, if no filter is present. Later we can bring updated Units here
 rng.AutoFilter
@@ -126,17 +143,13 @@ With rng2
  "Asheville", "Springfield", "Memphis"), Operator:=xlFilterValues
 End With
 
-'Refresh Data Connections
+'Refresh all Data Connections
 Dim objConn As Variant
 For Each objConn In ThisWorkbook.Connections
     objConn.Refresh
 Next
 
-'Clear contents
-LastRow_WkSt4 = Sheets("WkSt4").Cells(Rows.Count, 2).End(xlUp).Row
-Worksheets("WkSt4").Range("A2:AE" & LastRow_WkSt4).ClearContents
-
-'Paste the time stamp in a sheet cell after macro has run
+'Paste the time stamp in a wkst cell after the macro has run
 Worksheets("Refresh").Range("J16") = Now
 
 End Sub
