@@ -48,7 +48,22 @@ ActiveSheet.UsedRange.ClearFormats
 'defining an array
 Dim nr As Variant
 nr = Array("DATA_1", "DATA_2", "DATA_3", "DATA_4", "DATA_5", "DATA_6")
+                    
+'''Splitting comma separated cell value to an array and writing the elements back to Excel range                    
+Dim aray As Variant, str As String
+Dim i As Integer, m As Integer
+'read comma separated cell value from Excel
+str = Range("B2").Value
+'read the individual elements to an array
+aray = VBA.split(str, ",")
 
+i = 3
+'Write values of the array to Excel range
+For m = LBound(aray) To UBound(aray)
+    Cells(i, 3).Value = aray(m)
+    i = i + 1
+Next
+                    
 'closing a workbook
 Workbooks("XYZ Damage Reduction Source Data Query.xlsx").Close
      
