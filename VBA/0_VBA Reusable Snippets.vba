@@ -110,6 +110,9 @@ Worksheets("WkSt2").Range("A7:AE" & LastRow_WkSt2).Copy
 Worksheets("WkSt4").Cells(LastRow_WkSt4 + 1, 1).PasteSpecial xlPasteValues
 Application.CutCopyMode = False
 
+'While avoiding 'Select' or 'Activate', when you have to use Cells in a Range, use the below snippet
+Sheets("A").Range(Sheets("A").Cells(lr + 1, 14), Sheets("A").Cells(lr + 1, 20)).Value = "Lol"
+
 'Open workbook and switch windows (Ctrl+Tab)
 Windows("XYZ Damage Reduction Source Data Query.xlsx").Activate
 Workbooks.Open "\\USXS1031\Groups\EMA-XYZ\Public\XYZ Damage Data\XYZ Damage Reduction Source Data Query.xlsx"
