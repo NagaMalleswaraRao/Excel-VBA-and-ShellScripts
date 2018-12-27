@@ -155,8 +155,17 @@ Set rng2 = Worksheets("Units").Range("L9:S" & LastRow_Units2)
 
 With rng2
         .AutoFilter Field:=1, Criteria1:=Array( _
- "Asheville", "Springfield", "Memphis"), Operator:=xlFilterValues
+          "Asheville", "Springfield", "Memphis"), Operator:=xlFilterValues
 End With
+
+'Filter Multiple items in multiple fields
+'rng is Range to filter, arr is an array  
+With rng
+     .AutoFilter Field:=3, Criteria1:=arr1, Operator:=xlFilterValues
+     .AutoFilter Field:=4, Criteria1:=arr2, Operator:=xlFilterValues
+     .AutoFilter Field:=5, Criteria1:=arr3, Operator:=xlFilterValues
+End With
+
 
 'Refresh all Data Connections
 Dim objConn As Variant
