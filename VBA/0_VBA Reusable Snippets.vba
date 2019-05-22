@@ -75,7 +75,9 @@ Workbooks("XYZ Damage Reduction Source Data Query.xlsx").Close
 'save and close active workbook
 ActiveWorkbook.Close True
 
-'Delete data from A to AE, leave a formula row from Af to BC                         
+'Delete data from A to AE, leave a formula row from Af to BC  (if any filter is present, remove it)   
+Sheets("WkSt4").Select
+Selection.AutoFilter
 LastRow_WkSt40 = Worksheets("WkSt4").Cells(Rows.Count, 2).End(xlUp).Row
 
 If LastRow_WkSt40 > 2 Then
