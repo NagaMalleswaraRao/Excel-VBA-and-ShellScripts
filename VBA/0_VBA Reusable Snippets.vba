@@ -24,6 +24,11 @@ Dim z As String
 Dim a As Long
 Dim b As Double
 
+'define public variables. These can be used throughout the workbook across modules
+Public LastRow_1 As Long
+Public wkbk1 As Workbook
+Public str1 As String
+
 'select a worksheet (try to avoid this as much as possible)
 Worksheets("Sheet3").Activate
 Worksheets("Sheet3").Select
@@ -178,5 +183,19 @@ Next
 
 'Paste the time stamp in a wkst cell after the macro has run
 Worksheets("Refresh").Range("J16") = Now
+
+'call a macro (UnhideAllSheets) in this workbook
+Call UnhideAllSheets
+
+'''call a macro (tgt_macro) in a opened workbook
+Dim str as string, wkbk_name as string
+Dim wkbk as workbook
+'read the filepath from a cell in Thisworkbook and open it and assign it to a variable
+'sample filepath: L:\Public\Finance\2019\Input\Template_file.xlsb
+wkbk_name = Thisworkbook.Worksheets("Macros").Cells(10, 3).Value
+Workbooks.Open wkbk_name
+Set wkbk = ActiveWorkbook
+str = "'Template_file.xlsb'!tgt_macro"
+wkbk.Application.Run (str)
 
 End Sub
