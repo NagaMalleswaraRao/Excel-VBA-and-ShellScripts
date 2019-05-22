@@ -139,7 +139,8 @@ With rng
         .AutoFilter Field:=3, Criteria1:=Month
         .Offset(1, 0).SpecialCells(xlCellTypeVisible).ClearContents
 End With
-
+'make sure the cell selected is present in the range; if it's in a pivot table, it will remove filters of it
+Worksheets("Units").Range("L9").Select
 ActiveSheet.ShowAllData
 
 ''Sort on Year and Month to remove blanks in middle
@@ -169,7 +170,7 @@ With rng2
 End With
 
 'Filter Multiple items in multiple fields
-'rng is Range to filter, arr is an array  
+'rng is the Range to filter on, arr is an array  
 With rng
      .AutoFilter Field:=3, Criteria1:=arr1, Operator:=xlFilterValues
      .AutoFilter Field:=4, Criteria1:=arr2, Operator:=xlFilterValues
@@ -200,4 +201,36 @@ Set wkbk = ActiveWorkbook
 str = "'Template_file.xlsb'!tgt_macro"
 wkbk.Application.Run (str)
 
+'Refreshes Power Queries, since Power query connection starts with "Query - ", 
+'we'll use that to refresh only Power Queries
+Dim con As WorkbookConnection
+Dim Cname As String
+
+For Each con In wkbk4.Connections
+    If Left(con.Name, 8) = "Query - " Then
+        Cname = con.Name
+        With wkbk4.Connections(Cname).OLEDBConnection
+            .BackgroundQuery = False
+            .Refresh
+        End With
+    End If
+Next
+
+'asking Yes or No question. If yes, then proceed, if no, then ask them to input and run the further code
+Sub GP1_FCST_Data_IO()
+Dim a As Integer, dummy As Integer
+a = MsgBox("Did you input the correct Cycle_name and month for the connection in GP1 Forecast tab?", vbYesNo + vbQuestion, "Please Respond")
+
+If a = vbYes Then
+    Call Update_GP1_FCST_Data_IO
+Else
+    MsgBox ("Input now and run the code")
+    Call Update_GP1_FCST_Data_IO
+End If
 End Sub
+
+
+End Sub
+
+
+
