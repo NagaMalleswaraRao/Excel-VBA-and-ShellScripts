@@ -219,7 +219,8 @@ Next
 'asking Yes or No question. If yes, then proceed, if no, then ask them to input and run the further code
 Sub GP1_FCST_Data_IO()
 Dim a As Integer, dummy As Integer
-a = MsgBox("Did you input the correct Cycle_name and month for the connection in GP1 Forecast tab?", vbYesNo + vbQuestion, "Please Respond")
+a = MsgBox("Did you input the correct Cycle_name and month for the  _
+connection in GP1 Forecast tab?", vbYesNo + vbQuestion, "Please Respond")
 
 If a = vbYes Then
     Call Update_GP1_FCST_Data_IO
