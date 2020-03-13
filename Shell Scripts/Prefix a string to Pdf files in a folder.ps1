@@ -7,4 +7,4 @@ $prefix = [Microsoft.VisualBasic.Interaction]::InputBox("Enter the prefix `n`nNo
 
 # Using the Variables, change directory and add prefix to Pdf files only
 cd $path
-Get-ChildItem -Filter "*pdf*" -Recurse | Rename-Item -NewName {$prefix + $_.basename + $_.extension}
+(Get-ChildItem -Filter "*pdf*" -Recurse) | Rename-Item -NewName {$prefix + $_.basename + $_.extension}
